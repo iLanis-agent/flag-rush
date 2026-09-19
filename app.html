@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flag Rush - the 60-second flag quiz</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#0d0a1a; color:#f1edff; min-height:100vh; }
+  .wrap { max-width:640px; margin:0 auto; padding:22px 16px 60px; text-align:center; }
+  h1 { font-size:24px; font-weight:800; }
+  h1 .f { color:#c084fc; }
+  .hud { display:flex; justify-content:space-between; align-items:center; background:#161028; border:1px solid #2b2145; border-radius:12px; padding:10px 16px; margin:16px 0 12px; font-variant-numeric:tabular-nums; }
+  .hud .cell { text-align:center; }
+  .hud .k { font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#8b7fb8; }
+  .hud .v { font-size:20px; font-weight:700; }
+  #tbar { height:6px; background:#221a3d; border-radius:99px; overflow:hidden; margin-bottom:18px; }
+  #tfill { height:100%; width:100%; background:linear-gradient(90deg,#c084fc,#7c3aed); transition:width .2s linear; }
+  #flag { font-size:130px; line-height:1.15; margin:10px 0 20px; filter:drop-shadow(0 8px 24px rgba(0,0,0,.5)); }
+  #flag.shake { animation:shake .3s; }
+  @keyframes shake { 25%{transform:translateX(-8px);} 50%{transform:translateX(8px);} 75%{transform:translateX(-5px);} }
+  .opts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt { background:#161028; border:2px solid #2b2145; color:#f1edff; border-radius:12px; padding:16px 10px; font-size:16px; font-weight:600; cursor:pointer; transition:border-color .12s, background .12s; }
+  .opt:hover:not(:disabled) { border-color:#7c3aed; }
+  .opt:disabled { cursor:default; opacity:.85; }
+  .opt.right { background:#14532d; border-color:#22c55e; }
+  .opt.wrong { background:#4c0519; border-color:#e11d48; }
+  .card { background:#161028; border:1px solid #2b2145; border-radius:16px; padding:30px 22px; margin-top:14px; }
+  .card h2 { font-size:26px; margin-bottom:8px; }
+  .card p { color:#a79fd0; font-size:15px; line-height:1.55; }
+  .bigbtn { display:inline-block; margin-top:20px; background:linear-gradient(135deg,#a855f7,#6d28d9); border:none; color:#fff; font-size:17px; font-weight:700; padding:14px 42px; border-radius:12px; cursor:pointer; box-shadow:0 8px 28px #7c3aed50; }
+  .bigbtn:hover { transform:translateY(-1px); }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+  .stat { background:#0d0a1a; border:1px solid #2b2145; border-radius:10px; padding:12px; }
+  .stat .k { font-size:11px; text-transform:uppercase; color:#8b7fb8; letter-spacing:1px; }
+  .stat .v { font-size:22px; font-weight:800; margin-top:2px; }
+  footer { color:#5d548a; font-size:12px; margin-top:26px; }
+  footer a { color:#8b7fb8; text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="f">&#9873;</span> Flag Rush</h1>
+  <div id="screen"></div>
+  <footer><a href="index.html">&#8592; About</a> &nbsp;|&nbsp; Flag Rush &middot; idea #3 from the iLanis App Factory</footer>
+</div>
+<script>
+var C=[
+["Argentina","\u{1F1E6}\u{1F1F7}"],["Australia","\u{1F1E6}\u{1F1FA}"],["Austria","\u{1F1E6}\u{1F1F9}"],["Belgium","\u{1F1E7}\u{1F1EA}"],["Brazil","\u{1F1E7}\u{1F1F7}"],["Bulgaria","\u{1F1E7}\u{1F1EC}"],
+["Canada","\u{1F1E8}\u{1F1E6}"],["Chile","\u{1F1E8}\u{1F1F1}"],["China","\u{1F1E8}\u{1F1F3}"],["Colombia","\u{1F1E8}\u{1F1F4}"],["Croatia","\u{1F1ED}\u{1F1F7}"],["Cuba","\u{1F1E8}\u{1F1FA}"],
+["Cyprus","\u{1F1E8}\u{1F1FE}"],["Czechia","\u{1F1E8}\u{1F1FF}"],["Denmark","\u{1F1E9}\u{1F1F0}"],["Egypt","\u{1F1EA}\u{1F1EC}"],["Estonia","\u{1F1EA}\u{1F1EA}"],["Finland","\u{1F1EB}\u{1F1EE}"],
+["France","\u{1F1EB}\u{1F1F7}"],["Georgia","\u{1F1EC}\u{1F1EA}"],["Germany","\u{1F1E9}\u{1F1EA}"],["Greece","\u{1F1EC}\u{1F1F7}"],["Hungary","\u{1F1ED}\u{1F1FA}"],["Iceland","\u{1F1EE}\u{1F1F8}"],
+["India","\u{1F1EE}\u{1F1F3}"],["Indonesia","\u{1F1EE}\u{1F1E9}"],["Ireland","\u{1F1EE}\u{1F1EA}"],["Israel","\u{1F1EE}\u{1F1F1}"],["Italy","\u{1F1EE}\u{1F1F9}"],["Japan","\u{1F1EF}\u{1F1F5}"],
+["Kenya","\u{1F1F0}\u{1F1EA}"],["Latvia","\u{1F1F1}\u{1F1FB}"],["Lithuania","\u{1F1F1}\u{1F1F9}"],["Mexico","\u{1F1F2}\u{1F1FD}"],["Morocco","\u{1F1F2}\u{1F1E6}"],["Netherlands","\u{1F1F3}\u{1F1F1}"],
+["New Zealand","\u{1F1F3}\u{1F1FF}"],["Nigeria","\u{1F1F3}\u{1F1EC}"],["Norway","\u{1F1F3}\u{1F1F4}"],["Peru","\u{1F1F5}\u{1F1EA}"],["Philippines","\u{1F1F5}\u{1F1ED}"],["Poland","\u{1F1F5}\u{1F1F1}"],
+["Portugal","\u{1F1F5}\u{1F1F9}"],["Romania","\u{1F1F7}\u{1F1F4}"],["Saudi Arabia","\u{1F1F8}\u{1F1E6}"],["Serbia","\u{1F1F7}\u{1F1F8}"],["Singapore","\u{1F1F8}\u{1F1EC}"],["Slovakia","\u{1F1F8}\u{1F1F0}"],
+["Slovenia","\u{1F1F8}\u{1F1EE}"],["South Africa","\u{1F1FF}\u{1F1E6}"],["South Korea","\u{1F1F0}\u{1F1F7}"],["Spain","\u{1F1EA}\u{1F1F8}"],["Sweden","\u{1F1F8}\u{1F1EA}"],["Switzerland","\u{1F1E8}\u{1F1ED}"],
+["Thailand","\u{1F1F9}\u{1F1ED}"],["Turkey","\u{1F1F9}\u{1F1F7}"],["Ukraine","\u{1F1FA}\u{1F1E6}"],["UAE","\u{1F1E6}\u{1F1EA}"],["UK","\u{1F1EC}\u{1F1E7}"],["USA","\u{1F1FA}\u{1F1F8}"],
+["Uruguay","\u{1F1FA}\u{1F1FE}"],["Vietnam","\u{1F1FB}\u{1F1F3}"],["Jamaica","\u{1F1EF}\u{1F1F2}"],["Malta","\u{1F1F2}\u{1F1F9}"],["Monaco","\u{1F1F2}\u{1F1E8}"],["Luxembourg","\u{1F1F1}\u{1F1FA}"],
+["Qatar","\u{1F1F6}\u{1F1E6}"],["Ethiopia","\u{1F1EA}\u{1F1F9}"],["Ghana","\u{1F1EC}\u{1F1ED}"],["Pakistan","\u{1F1F5}\u{1F1F0}"],["Iraq","\u{1F1EE}\u{1F1F6}"],["Lebanon","\u{1F1F1}\u{1F1E7}"],
+["Albania","\u{1F1E6}\u{1F1F1}"],["Armenia","\u{1F1E6}\u{1F1F2}"],["Iceland2","\u{1F1EE}\u{1F1F8}"],["Panama","\u{1F1F5}\u{1F1E6}"],["Ecuador","\u{1F1EA}\u{1F1E8}"],["Bolivia","\u{1F1E7}\u{1F1F4}"]
+];
+C=C.filter(function(x){return x[0]!=="Iceland2";});
+var ROUND=60, G={score:0,streak:0,best:0,asked:0,correct:0,tleft:0,timer:null,cur:null,lock:false};
+try{G.best=parseInt(localStorage.getItem('flagrush-best')||'0',10);}catch(_){}
+function el(id){return document.getElementById(id);}
+function pick(){ return C[Math.floor(Math.random()*C.length)]; }
+function question(){
+  if(G.tleft<=0) return endRound();
+  var ans=pick(), opts=[ans], seen={}; seen[ans[0]]=1;
+  while(opts.length<4){ var c=pick(); if(!seen[c[0]]){seen[c[0]]=1;opts.push(c);} }
+  for(var i=opts.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=opts[i];opts[i]=opts[j];opts[j]=t; }
+  G.cur=ans; G.lock=false;
+  el('screen').innerHTML=
+    '<div class="hud"><div class="cell"><div class="k">score</div><div class="v" id="hscore">'+G.score+'</div></div>'+
+    '<div class="cell"><div class="k">streak</div><div class="v" id="hstreak">'+G.streak+'</div></div>'+
+    '<div class="cell"><div class="k">time</div><div class="v" id="htime">'+G.tleft+'</div></div></div>'+
+    '<div id="tbar"><div id="tfill" style="width:'+(G.tleft/ROUND*100)+'%"></div></div>'+
+    '<div id="flag">'+ans[1]+'</div><div class="opts">'+
+    opts.map(function(o,i){return '<button class="opt" data-n="'+o[0]+'">'+o[0]+'</button>';}).join('')+'</div>';
+  var btns=document.querySelectorAll('.opt');
+  btns.forEach(function(b){ b.onclick=function(){ answer(b,btns); }; });
+}
+function answer(b,btns){
+  if(G.lock) return; G.lock=true;
+  G.asked++;
+  var right=(b.dataset.n===G.cur[0]);
+  btns.forEach(function(x){ x.disabled=true; if(x.dataset.n===G.cur[0]) x.classList.add('right'); });
+  if(right){ G.correct++; G.streak++; G.score+=100+Math.min(G.streak-1,5)*20; }
+  else { b.classList.add('wrong'); G.streak=0; el('flag').classList.add('shake'); }
+  el('hscore').textContent=G.score; el('hstreak').textContent=G.streak;
+  setTimeout(question, right?450:900);
+}
+function tick(){
+  G.tleft--;
+  var t=el('htime'); if(t) t.textContent=G.tleft;
+  var f=el('tfill'); if(f) f.style.width=Math.max(0,G.tleft/ROUND*100)+'%';
+  if(G.tleft<=0){ clearInterval(G.timer); endRound(); }
+}
+function startRound(){
+  G.score=0;G.streak=0;G.asked=0;G.correct=0;G.tleft=ROUND;
+  question();
+  G.timer=setInterval(tick,1000);
+}
+function endRound(){
+  clearInterval(G.timer);
+  var acc=G.asked?Math.round(G.correct/G.asked*100):0;
+  var isBest=G.score>G.best; if(isBest){G.best=G.score; try{localStorage.setItem('flagrush-best',String(G.best));}catch(_){}}
+  el('screen').innerHTML='<div class="card"><h2>'+(isBest?'New best! ':'Time up! ')+G.score+' pts</h2>'+
+   '<p>You named '+G.correct+' of '+G.asked+' flags.</p>'+
+   '<div class="stats"><div class="stat"><div class="k">accuracy</div><div class="v">'+acc+'%</div></div>'+
+   '<div class="stat"><div class="k">best score</div><div class="v">'+G.best+'</div></div></div>'+
+   '<button class="bigbtn" onclick="startRound()">Play again</button></div>';
+}
+el('screen').innerHTML='<div class="card"><h2>60 seconds. How many flags?</h2>'+
+ '<p>A flag appears, four countries wait below. Tap the right one - streaks multiply your points. '+
+ C.length+' countries in the deck.</p>'+
+ (G.best?'<p style="margin-top:8px;color:#c084fc">Best so far: '+G.best+' pts</p>':'')+
+ '<button class="bigbtn" onclick="startRound()">Start</button></div>';
+</script>
+</body>
+</html>

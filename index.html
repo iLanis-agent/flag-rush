@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flag Rush - how many flags can you name in 60 seconds?</title>
+<meta name="description" content="Flag Rush is a 60-second flag quiz: a flag appears, four countries wait below, streaks multiply your points.">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#0d0a1a; color:#f1edff; min-height:100vh; }
+  .hero { min-height:92vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:40px 20px;
+    background:radial-gradient(ellipse 75% 50% at 50% 110%, #7c3aed55 0%, #4c1d9530 40%, transparent 70%); }
+  .badge { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#c084fc; border:1px solid #4c1d95; border-radius:999px; padding:6px 16px; margin-bottom:26px; }
+  h1 { font-size:clamp(38px,7.5vw,72px); font-weight:800; line-height:1.06;
+    background:linear-gradient(120deg,#e9d5ff,#c084fc 45%,#7c3aed); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .sub { font-size:clamp(16px,2.4vw,21px); color:#a79fd0; max-width:560px; margin-top:20px; line-height:1.55; }
+  .cta { margin-top:38px; display:inline-block; background:linear-gradient(135deg,#a855f7,#6d28d9); color:#fff; font-size:18px; font-weight:700;
+    padding:16px 44px; border-radius:14px; text-decoration:none; box-shadow:0 10px 34px #7c3aed50; transition:transform .15s ease; }
+  .cta:hover { transform:translateY(-2px); }
+  .flags { font-size:34px; letter-spacing:6px; margin-top:34px; }
+  .feats { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; max-width:900px; margin:0 auto; padding:20px 20px 70px; }
+  .f { background:#161028; border:1px solid #2b2145; border-radius:14px; padding:22px; }
+  .f .ic { font-size:26px; }
+  .f h3 { font-size:16px; margin:10px 0 6px; }
+  .f p { font-size:14px; color:#a79fd0; line-height:1.5; }
+  footer { text-align:center; color:#5d548a; font-size:13px; padding:26px; border-top:1px solid #221a3d; }
+  footer a { color:#8b7fb8; }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div class="badge">iLanis App Factory &middot; idea #3</div>
+    <h1>Sixty seconds.<br>Every flag you know.</h1>
+    <p class="sub">Flag Rush throws the world's flags at you one after another. Four answers, one right, streaks multiply your score. It's geography class - if geography class were a street fight.</p>
+    <a class="cta" href="app.html">Play Flag Rush</a>
+    <div class="flags">&#127468;&#127463; &#127470;&#127473; &#127471;&#127477; &#127466;&#127468; &#127347;&#127479; &#127472;&#127530; &#127470;&#127475; &#127482;&#127480;</div>
+  </section>
+  <section class="feats">
+    <div class="f"><div class="ic">&#9873;</div><h3>76 countries</h3><p>A hand-picked deck from every continent - the classics, plus the ones that always trip you up.</p></div>
+    <div class="f"><div class="ic">&#128293;</div><h3>Streak scoring</h3><p>100 points per flag, plus a growing bonus for every consecutive hit. Greed is good.</p></div>
+    <div class="f"><div class="ic">&#9200;</div><h3>One-minute rounds</h3><p>Fast enough for a queue, a commute, or proving a point to a friend.</p></div>
+    <div class="f"><div class="ic">&#127942;</div><h3>Chase your best</h3><p>Your high score is saved on the device, so there's always a number to beat.</p></div>
+  </section>
+  <footer>No sign-up. No tracking. Everything runs in your browser.<br>
+  Built by the <a href="https://ilanis-agent.github.io/app-factory/">iLanis App Factory</a> &middot; <a href="https://github.com/iLanis-agent/flag-rush">source on GitHub</a></footer>
+</body>
+</html>
